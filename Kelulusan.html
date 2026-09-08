@@ -122,6 +122,75 @@
             justify-content: center;
         }
 
+        /* Banner Pengumuman Pembatalan & Evaluasi */
+        .eval-banner {
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.15), rgba(251, 191, 36, 0.15));
+            border: 1px solid var(--danger);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(248, 113, 113, 0.2);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .eval-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 6px; height: 100%;
+            background: var(--danger);
+        }
+
+        .eval-banner-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .eval-banner-header i {
+            font-size: 1.5rem;
+            color: var(--danger);
+            animation: pulseWarning 1.5s infinite;
+        }
+
+        @keyframes pulseWarning {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .eval-banner-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            color: var(--text-main);
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .eval-banner p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .eval-banner p strong {
+            color: var(--text-main);
+        }
+
+        .chancellor-quote {
+            background: rgba(2, 6, 23, 0.6);
+            border-left: 3px solid var(--accent);
+            padding: 12px 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-style: italic;
+            margin-top: 10px;
+        }
+
         .verify-card {
             background: var(--surface-glass);
             border: 1px solid var(--border-accent);
@@ -168,7 +237,7 @@
             text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
         }
 
-        .verify-card p {
+        .verify-card > p {
             color: var(--text-muted);
             font-size: 0.9rem;
             margin-bottom: 30px;
@@ -511,10 +580,27 @@
     </header>
 
     <main>
+        <!-- Banner Pengumuman Pembatalan / Evaluasi Penting -->
+        <div class="eval-banner">
+            <div class="eval-banner-header">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h3>PENGUMUMAN PENTING & KLARIFIKASI RESMI</h3>
+            </div>
+            <p>
+                Mohon maaf yang sebesar-besarnya kepada seluruh peserta. Pengumuman hasil seleksi yang sebelumnya telah dirilis secara resmi <strong>DI-CANCEL (DIBATALKAN)</strong>. Kebijakan ini diambil menyusul adanya **evaluasi serius dan komprehensif** yang langsung diarahkan oleh Chancellor Universitas Djuanda, **Prof. Dr. Martin Roestamy, SH, MH**, selaku Pembina PP Mabit.
+            </p>
+            <div class="chancellor-quote">
+                "Evaluasi ketat ini dilakukan demi menjamin objektivitas, keadilan, serta kualitas integritas output kaderisasi terbaik bagi masa depan peserta."
+            </div>
+            <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-main);">
+                Berikut di bawah ini adalah hasil verifikasi status terbaru yang telah disesuaikan dan divalidasi ulang berdasarkan hasil keputusan mutakhir. Silakan cek kembali menggunakan nama dan password Anda.
+            </p>
+        </div>
+
         <div class="verify-card">
-            <span class="verify-badge">// OFFICIAL ENCRYPTED RESULT 2026</span>
-            <h1>CEK STATUS <span>KELULUSAN RESMI</span></h1>
-            <p>Masukkan Nama (bisa nama panggilan) beserta Password Pribadi Anda untuk memverifikasi status kelulusan secara instan.</p>
+            <span class="verify-badge">// OFFICIAL REVISED RESULT 2026</span>
+            <h1>CEK STATUS <span>KELULUSAN TERBARU</span></h1>
+            <p>Masukkan Nama (bisa nama panggilan) beserta Password Pribadi Anda untuk memverifikasi status kelulusan pasca-evaluasi.</p>
 
             <div class="input-container">
                 <div class="input-group-field">
@@ -526,7 +612,7 @@
                     <input type="password" id="participantPassword" placeholder="Masukkan password Anda" autocomplete="off" onkeypress="handleKeyPress(event)">
                 </div>
                 <button class="btn-verify" onclick="checkStatus()">
-                    <i class="fa-solid fa-magnifying-glass"></i> CEK STATUS KELULUSAN
+                    <i class="fa-solid fa-magnifying-glass"></i> CEK STATUS KELULUSAN TERBARU
                 </button>
             </div>
             <div class="hint-text">💡 Pastikan Nama dan Password Anda sesuai terdaftar di sistem.</div>
@@ -544,7 +630,7 @@
                 </div>
 
                 <div class="test-history-section">
-                    <h4><i class="fa-solid fa-file-shield"></i> REKAPITULASI PENILAIAN (STANDAR KELULUSAN TEPAT)</h4>
+                    <h4><i class="fa-solid fa-file-shield"></i> REKAPITULASI PENILAIAN (PASCA EVALUASI)</h4>
                     <table class="test-table">
                         <thead>
                             <tr>
@@ -633,8 +719,8 @@
             { name: "Salwa", id: "PKD-2026-005", password: "pwd005", prodi: "Pendidikan Bahasa Arab", school: "SMAN 1 Paralansalak", tpa: 85, tahfidz: 80, kepesantrenan: 85.7, itikaf: 88.8, psikotes: "Rekomendasi", status: "LULUS" },
             { name: "Najmi Syahru Shiyam", id: "PKD-2026-006", password: "pwd006", prodi: "Pendidikan Bahasa Arab", school: "SMAN 1 Cicurug", tpa: 70, tahfidz: 77, kepesantrenan: 81.7, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
             { name: "Silvi Awalia Gumilar", id: "PKD-2026-026", password: "pwd026", prodi: "Manajemen Pendidikan Islam", school: "Pondok Pesantren Hamalatul Qur'an Al-Falakiyah", tpa: 79, tahfidz: 82, kepesantrenan: 81.3, itikaf: 73.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Galang Permana", id: "PKD-2026-011", password: "pwd011", prodi: "Ekonomi Syariah", school: "MA Al Firdaus", tpa: 76, tahfidz: 80, kepesantrenan: 78.5, itikaf: 52.5, psikotes: "Rekomendasi", status: "TIDAK LULUS", note: "Harap datang ke kampus untuk konfirmasi lanjutan." },
-            { name: "Teungku Muhammad Amar Al Muharram", id: "PKD-2026-013", password: "pwd013", prodi: "Manajemen", school: "MA Al-Firdaus", tpa: 73, tahfidz: 71, kepesantrenan: 76.2, itikaf: 51.3, psikotes: "Rekomendasi", status: "TIDAK LULUS", note: "Harap datang langsung ke kampus." },
+            { name: "Galang Permana", id: "PKD-2026-011", password: "pwd011", prodi: "Ekonomi Syariah", school: "MA Al Firdaus", tpa: 76, tahfidz: 80, kepesantrenan: 78.5, itikaf: 52.5, psikotes: "Rekomendasi", status: "TIDAK LULUS", note: "Tidak lulus dan diharapkan hadir langsung ke kampus." },
+            { name: "Teungku Muhammad Amar Al Muharram", id: "PKD-2026-013", password: "pwd013", prodi: "Manajemen", school: "MA Al-Firdaus", tpa: 73, tahfidz: 71, kepesantrenan: 76.2, itikaf: 51.3, psikotes: "Rekomendasi", status: "TIDAK LULUS", note: "Tidak lulus dan diharapkan hadir langsung ke kampus." },
             { name: "Fauzul Akbar", id: "PKD-2026-014", password: "pwd014", prodi: "Manajemen", school: "MA Al Firdaus", tpa: 64, tahfidz: 80, kepesantrenan: 75.2, itikaf: 51.3, psikotes: "Rekomendasi", status: "LULUS" },
             { name: "Muhammad Tyas Syarifatullah", id: "PKD-2026-015", password: "pwd015", prodi: "Manajemen", school: "MA Al Firdaus", tpa: 61, tahfidz: 75, kepesantrenan: 76.1, itikaf: 80, psikotes: "Rekomendasi", status: "LULUS" },
             { name: "Muthia Az-Zahra", id: "PKD-2026-011", password: "pwd011b", prodi: "Akuntansi", school: "SMA Negeri 1 Bogor", tpa: 80, tahfidz: 80, kepesantrenan: 80, itikaf: 80, psikotes: "Rekomendasi", status: "LULUS" },
@@ -655,7 +741,7 @@
             // Update: M. Rizki Al Muiz jadi LULUS
             { name: "M. Rizki Al Muiz", id: "PKD-2026-002", password: "pwd002", prodi: "Manajemen Pendidikan Islam", school: "SMK Al Watasi", tpa: 64, tahfidz: 77, kepesantrenan: 79.3, itikaf: 86.3, psikotes: "Tidak Rekomendasi", status: "LULUS" },
             
-            { name: "Siti Nuravni", id: "PKD-2026-004", password: "pwd004", prodi: "Teknologi Industri Pertanian", school: "MAS. Nurul Islam", tpa: 82, tahfidz: 66, kepesantrenan: 81.3, itikaf: 78.8, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
+            { name: "Siti Nuravni", id: "PKD-2026-004", password: "pwd004", prodi: "Manajemen Pendidikan Islam", school: "MAS. Nurul Islam", tpa: 82, tahfidz: 66, kepesantrenan: 81.3, itikaf: 78.8, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
             { name: "Siti Chairunnisa", id: "PKD-2026-007", password: "pwd007", prodi: "Pendidikan Bahasa Arab", school: "MAS Darul Hufadh", tpa: 70, tahfidz: 66, kepesantrenan: 83.6, itikaf: 82.5, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
             { name: "Agis Nur Zahra", id: "PKD-2026-008", password: "pwd008", prodi: "Pendidikan Bahasa Arab", school: "MA Al Firdaus", tpa: 64, tahfidz: 71, kepesantrenan: 77.3, itikaf: 78.8, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
             
@@ -663,7 +749,7 @@
             { name: "Shohibul Wafa Tajul Arifin", id: "PKD-2026-009", password: "pwd009", prodi: "Pendidikan Agama Islam", school: "MAS Ulumuddin Susukan Cirebon", tpa: 61, tahfidz: 82, kepesantrenan: 80.5, itikaf: 85, psikotes: "Tidak Rekomendasi", status: "LULUS" },
             
             // Update: Shohibul Wafi Tajul Arifin Tidak Diterima & Pindah ke Beasiswa Tahfidz
-            { name: "Shohibul Wafi Tajul Arifin", id: "PKD-2026-010", password: "pwd010", prodi: "Beasiswa Tahfidz (Pindahan PAI)", school: "MAS Ulumuddin Susukan Cirebon", tpa: 58, tahfidz: 73, kepesantrenan: 79.8, itikaf: 83.8, psikotes: "Tidak Rekomendasi", status: "PINDAH BEASISWA TAHFIDZ", note: " dialihkan dan dipindahkan pendaftarannya ke jalur Beasiswa Tahfidz." },
+            { name: "Shohibul Wafi Tajul Arifin", id: "PKD-2026-010", password: "pwd010", prodi: "Beasiswa Tahfidz (Pindahan PAI)", school: "MAS Ulumuddin Susukan Cirebon", tpa: 58, tahfidz: 73, kepesantrenan: 79.8, itikaf: 83.8, psikotes: "Tidak Rekomendasi", status: "PINDAH BEASISWA TAHFIDZ", note: "dialihkan dan dipindahkan pendaftarannya ke jalur Beasiswa Tahfidz." },
 
             // Update: Zulhan Yahya Tidak Lulus & Diharapkan ke Kampus
             { name: "Zulhan Yahya", id: "PKD-2026-025", password: "pwd025", prodi: "Peternakan", school: "SMAIT Tebuireng 4 Al Ishlah Riau", tpa: 40, tahfidz: 50, kepesantrenan: 60, itikaf: 46.3, psikotes: "Tidak Rekomendasi", status: "TIDAK LULUS", note: "Tidak lulus dan diharapkan hadir langsung ke kampus." },
@@ -709,7 +795,6 @@
 
             resultContainer.style.display = 'block';
 
-            // Pencarian data berdasarkan nama (mendukung nama panggilan/depan) dan password yang cocok
             let data = databasePeserta.find(p => 
                 (p.name.toLowerCase() === inputName || p.name.toLowerCase().includes(inputName)) && 
                 p.password === inputPass
@@ -756,7 +841,7 @@
                 statusBox.className = "result-status-box warning";
                 resultTitle.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> STATUS: PINDAH JALUR BEASISWA TAHFIDZ';
                 actionAreaExtra.innerHTML = `
-                    <p style="color:var(--accent); margin-bottom:15px; font-weight:600;">Mohon maaf, Anda belum diterima di prodi reguler pilihan utama, namun ${data.note}</p>
+                    <p style="color:var(--accent); margin-bottom:15px; font-weight:600;">Mohon maaf, Anda belum diterima di Beasiswa Pendidikan Kader Dakwah, namun ${data.note}</p>
                 `;
             } else if (data.status === "DIPANGGIL / CATATAN") {
                 statusBox.className = "result-status-box warning";
