@@ -175,18 +175,31 @@
             line-height: 1.6;
         }
 
-        .input-group {
+        .input-container {
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            gap: 15px;
             max-width: 500px;
             margin: 0 auto 20px auto;
-            flex-wrap: wrap;
-            justify-content: center;
         }
 
-        .input-group input {
-            flex: 1;
-            min-width: 250px;
+        .input-group-field {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            gap: 5px;
+        }
+
+        .input-group-field label {
+            font-size: 0.8rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            padding-left: 5px;
+        }
+
+        .input-group-field input {
+            width: 100%;
             background: rgba(2, 6, 23, 0.8);
             border: 1px solid var(--border-glow);
             padding: 14px 20px;
@@ -199,7 +212,7 @@
             text-align: center;
         }
 
-        .input-group input:focus {
+        .input-group-field input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
         }
@@ -217,8 +230,11 @@
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+            width: 100%;
+            margin-top: 5px;
         }
 
         .btn-verify:hover {
@@ -321,7 +337,6 @@
             box-shadow: 0 0 20px rgba(52, 211, 153, 0.5);
         }
 
-        /* Gaya Khusus Bagian Rekomendasi Beasiswa Alternatif (Satu Saja) */
         .scholarship-box {
             margin-top: 20px;
             background: rgba(15, 23, 42, 0.8);
@@ -499,15 +514,22 @@
         <div class="verify-card">
             <span class="verify-badge">// OFFICIAL ENCRYPTED RESULT 2026</span>
             <h1>CEK STATUS <span>KELULUSAN RESMI</span></h1>
-            <p>Masukkan Nama Lengkap atau Nama Panggilan Anda untuk memverifikasi status kelulusan secara instan.</p>
+            <p>Masukkan Nama (bisa nama panggilan) beserta Password Pribadi Anda untuk memverifikasi status kelulusan secara instan.</p>
 
-            <div class="input-group">
-                <input type="text" id="participantName" placeholder="CONTOH: Salwa / Zulhan" autocomplete="off" onkeypress="handleKeyPress(event)">
+            <div class="input-container">
+                <div class="input-group-field">
+                    <label for="participantName">NAMA (LENGKAP / PANGGILAN)</label>
+                    <input type="text" id="participantName" placeholder="CONTOH: Salwa / Zulhan / Rizki" autocomplete="off">
+                </div>
+                <div class="input-group-field">
+                    <label for="participantPassword">PASSWORD PRIBADI</label>
+                    <input type="password" id="participantPassword" placeholder="Masukkan password Anda" autocomplete="off" onkeypress="handleKeyPress(event)">
+                </div>
                 <button class="btn-verify" onclick="checkStatus()">
-                    <i class="fa-solid fa-magnifying-glass"></i> CEK STATUS
+                    <i class="fa-solid fa-magnifying-glass"></i> CEK STATUS KELULUSAN
                 </button>
             </div>
-            <div class="hint-text">💡 Tips: Anda cukup mengetikkan **nama depan/panggilan** (Cth: <b style="color:var(--accent);">Ronaldo</b>)</div>
+            <div class="hint-text">💡 Pastikan Nama dan Password Anda sesuai terdaftar di sistem.</div>
 
             <div class="result-container" id="resultContainer">
                 <div class="result-status-box passed" id="statusBox">
@@ -535,7 +557,7 @@
                     </table>
                 </div>
 
-                <!-- Bagian Informasi Khusus Peserta Tidak Lolos -->
+                <!-- Bagian Informasi Khusus Peserta Tidak Lolos / Catatan Khusus -->
                 <div id="notPassedExtraContainer" style="display: none;"></div>
             </div>
         </div>
@@ -603,42 +625,54 @@
             }
         }
 
+        // Database Peserta dengan Update Status Baru & Password Pribadi
         const databasePeserta = [
-            // List Utama / Standar
-            { name: "Kayla Nurazizah", id: "PKD-2026-001", prodi: "Pendidikan Guru Sekolah Dasar", school: "MAS El Zahira", tpa: 67, tahfidz: 77, kepesantrenan: 77.3, itikaf: 78.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Arif Faturrohman", id: "PKD-2026-003", prodi: "Manajemen Pendidikan Islam", school: "Madrasah Aliyah Swasta Al-Furqoniyah", tpa: 85, tahfidz: 68, kepesantrenan: 79, itikaf: 83.3, psikotes: "Dipetimbangkan", status: "LULUS" },
-            { name: "Nur Luthfi Azzahra", id: "PKD-2026-27", prodi: "Manajemen Pendidikan Islam", school: "MAS Al Ma'rifah", tpa: 64, tahfidz: 78, kepesantrenan: 77, itikaf: 76.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Salwa", id: "PKD-2026-005", prodi: "Pendidikan Bahasa Arab", school: "SMAN 1 Paralansalak", tpa: 85, tahfidz: 80, kepesantrenan: 85.7, itikaf: 88.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Najmi Syahru Shiyam", id: "PKD-2026-006", prodi: "Pendidikan Bahasa Arab", school: "SMAN 1 Cicurug", tpa: 70, tahfidz: 77, kepesantrenan: 81.7, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Silvi Awalia Gumilar", id: "PKD-2026-026", prodi: "Manajemen Pendidikan Islam", school: "Pondok Pesantren Hamalatul Qur'an Al-Falakiyah", tpa: 79, tahfidz: 82, kepesantrenan: 81.3, itikaf: 73.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Galang Permana", id: "PKD-2026-011", prodi: "Ekonomi Syariah", school: "MA Al Firdaus", tpa: 76, tahfidz: 80, kepesantrenan: 78.5, itikaf: 52.5, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Teungku Muhammad Amar Al Muharram", id: "PKD-2026-013", prodi: "Manajemen", school: "MA Al-Firdaus", tpa: 73, tahfidz: 71, kepesantrenan: 76.2, itikaf: 51.3, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Fauzul Akbar", id: "PKD-2026-014", prodi: "Manajemen", school: "MA Al Firdaus", tpa: 64, tahfidz: 80, kepesantrenan: 75.2, itikaf: 51.3, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Muhammad Tyas Syarifatullah", id: "PKD-2026-015", prodi: "Manajemen", school: "MA Al Firdaus", tpa: 61, tahfidz: 75, kepesantrenan: 76.1, itikaf: 80, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Laura Adelsia", id: "PKD-2026-017", prodi: "Hukum", school: "Pesantren al hafizh bogor", tpa: 79, tahfidz: 74, kepesantrenan: 81.4, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Mufhiyatus Sa'aadah", id: "PKD-2026-018", prodi: "Agroteknologi", school: "SMA Al-Hadiid", tpa: 79, tahfidz: 71, kepesantrenan: 75.2, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Muhammad Reyanullah M", id: "PKD-2026-019", prodi: "Agroteknologi", school: "SMAN 1 Cicurug", tpa: 76, tahfidz: 74, kepesantrenan: 75.5, itikaf: 87.5, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Fathi Aji", id: "PKD-2026-020", prodi: "Agroteknologi", school: "SMA Nurul Fajri", tpa: 61, tahfidz: 71, kepesantrenan: 79.9, itikaf: 47.5, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Mohamad Rizky S", id: "PKD-2026-021", prodi: "Peternakan", school: "MAS Nurul Hikmah", tpa: 76, tahfidz: 76, kepesantrenan: 78.8, itikaf: 77.5, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Titan Nibras Sayyafurrahman", id: "PKD-2026-022", prodi: "Peternakan", school: "SMKS Cahaya Bangsa", tpa: 55, tahfidz: 82, kepesantrenan: 82.1, itikaf: 77.5, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Rodini Putri Zamroni", id: "PKD-2026-023", prodi: "Ilmu Komputer", school: "Pondok Modern Darussalam Gontor", tpa: 82, tahfidz: 74, kepesantrenan: 81.3, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Muhamad Firdan", id: "PKD-2026-024", prodi: "Ilmu Komputer", school: "SMK Amaliah 1 Ciawi", tpa: 70, tahfidz: 75, kepesantrenan: 69.7, itikaf: 76.3, psikotes: "Rekomendasi", status: "LULUS" },
-            { name: "Ronaldo", id: "PKD-2026-025", prodi: "Ilmu Komputer", school: "SMK Amaliah 2 Ciawi", tpa: 80, tahfidz: 85, kepesantrenan: 89.7, itikaf: 87.3, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Kayla Nurazizah", id: "PKD-2026-001", password: "pwd001", prodi: "Pendidikan Guru Sekolah Dasar", school: "MAS El Zahira", tpa: 67, tahfidz: 77, kepesantrenan: 77.3, itikaf: 78.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Arif Faturrohman", id: "PKD-2026-003", password: "pwd003", prodi: "Manajemen Pendidikan Islam", school: "Madrasah Aliyah Swasta Al-Furqoniyah", tpa: 85, tahfidz: 68, kepesantrenan: 79, itikaf: 83.3, psikotes: "Dipetimbangkan", status: "LULUS" },
+            { name: "Nur Luthfi Azzahra", id: "PKD-2026-27", password: "pwd027", prodi: "Manajemen Pendidikan Islam", school: "MAS Al Ma'rifah", tpa: 64, tahfidz: 78, kepesantrenan: 77, itikaf: 76.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Salwa", id: "PKD-2026-005", password: "pwd005", prodi: "Pendidikan Bahasa Arab", school: "SMAN 1 Paralansalak", tpa: 85, tahfidz: 80, kepesantrenan: 85.7, itikaf: 88.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Najmi Syahru Shiyam", id: "PKD-2026-006", password: "pwd006", prodi: "Pendidikan Bahasa Arab", school: "SMAN 1 Cicurug", tpa: 70, tahfidz: 77, kepesantrenan: 81.7, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Silvi Awalia Gumilar", id: "PKD-2026-026", password: "pwd026", prodi: "Manajemen Pendidikan Islam", school: "Pondok Pesantren Hamalatul Qur'an Al-Falakiyah", tpa: 79, tahfidz: 82, kepesantrenan: 81.3, itikaf: 73.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Galang Permana", id: "PKD-2026-011", password: "pwd011", prodi: "Ekonomi Syariah", school: "MA Al Firdaus", tpa: 76, tahfidz: 80, kepesantrenan: 78.5, itikaf: 52.5, psikotes: "Rekomendasi", status: "TIDAK LULUS", note: "Harap datang ke kampus untuk konfirmasi lanjutan." },
+            { name: "Teungku Muhammad Amar Al Muharram", id: "PKD-2026-013", password: "pwd013", prodi: "Manajemen", school: "MA Al-Firdaus", tpa: 73, tahfidz: 71, kepesantrenan: 76.2, itikaf: 51.3, psikotes: "Rekomendasi", status: "TIDAK LULUS", note: "Harap datang langsung ke kampus." },
+            { name: "Fauzul Akbar", id: "PKD-2026-014", password: "pwd014", prodi: "Manajemen", school: "MA Al Firdaus", tpa: 64, tahfidz: 80, kepesantrenan: 75.2, itikaf: 51.3, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Muhammad Tyas Syarifatullah", id: "PKD-2026-015", password: "pwd015", prodi: "Manajemen", school: "MA Al Firdaus", tpa: 61, tahfidz: 75, kepesantrenan: 76.1, itikaf: 80, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Muthia Az-Zahra", id: "PKD-2026-011", password: "pwd011b", prodi: "Akuntansi", school: "SMA Negeri 1 Bogor", tpa: 80, tahfidz: 80, kepesantrenan: 80, itikaf: 80, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Laura Adelsia", id: "PKD-2026-017", password: "pwd017", prodi: "Hukum", school: "Pesantren al hafizh bogor", tpa: 79, tahfidz: 74, kepesantrenan: 81.4, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Mufhiyatus Sa'aadah", id: "PKD-2026-018", password: "pwd018", prodi: "Agroteknologi", school: "SMA Al-Hadiid", tpa: 79, tahfidz: 71, kepesantrenan: 75.2, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Muhammad Reyanullah M", id: "PKD-2026-019", password: "pwd019", prodi: "Agroteknologi", school: "SMAN 1 Cicurug", tpa: 76, tahfidz: 74, kepesantrenan: 75.5, itikaf: 87.5, psikotes: "Rekomendasi", status: "LULUS" },
+            
+            // Fathi Aji (Catatan: diharapkan ke kampus karena status belum tentu lulus)
+            { name: "Fathi Aji", id: "PKD-2026-020", password: "pwd020", prodi: "Agroteknologi", school: "SMA Nurul Fajri", tpa: 61, tahfidz: 71, kepesantrenan: 79.9, itikaf: 47.5, psikotes: "Rekomendasi", status: "DIPANGGIL / CATATAN", note: "Status belum tentu lulus, Anda diharapkan hadir langsung ke kampus." },
+            
+            // Mohamad Rizky S (Catatan: diharapkan ke kampus karena status belum tentu lulus)
+            { name: "Mohamad Rizky S", id: "PKD-2026-021", password: "pwd021", prodi: "Peternakan", school: "MAS Nurul Hikmah", tpa: 76, tahfidz: 76, kepesantrenan: 78.8, itikaf: 77.5, psikotes: "Rekomendasi", status: "DIPANGGIL / CATATAN", note: "Status belum tentu lulus, Anda diharapkan hadir langsung ke kampus." },
+            
+            { name: "Titan Nibras Sayyafurrahman", id: "PKD-2026-022", password: "pwd022", prodi: "Peternakan", school: "SMKS Cahaya Bangsa", tpa: 55, tahfidz: 82, kepesantrenan: 82.1, itikaf: 77.5, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Rodini Putri Zamroni", id: "PKD-2026-023", password: "pwd023", prodi: "Ilmu Komputer", school: "Pondok Modern Darussalam Gontor", tpa: 82, tahfidz: 74, kepesantrenan: 81.3, itikaf: 83.8, psikotes: "Rekomendasi", status: "LULUS" },
+            { name: "Muhamad Firdan", id: "PKD-2026-024", password: "pwd024", prodi: "Ilmu Komputer", school: "SMK Amaliah 1 Ciawi", tpa: 70, tahfidz: 75, kepesantrenan: 69.7, itikaf: 76.3, psikotes: "Rekomendasi", status: "LULUS" },
 
-            // Yang Dipanggil / Wawancara Khusus
-            { name: "M. Rizki Al Muiz", id: "PKD-2026-002", prodi: "Manajemen Pendidikan Islam", school: "SMK Al Watasi", tpa: 64, tahfidz: 77, kepesantrenan: 79.3, itikaf: 86.3, psikotes: "Tidak Rekomendasi", status: "DIPANGGIL / WAWANCARA KHUSUS" },
-            { name: "Siti Nuravni", id: "PKD-2026-004", prodi: "Manajemen Pendidikan Islam", school: "MAS. Nurul Islam", tpa: 82, tahfidz: 66, kepesantrenan: 81.3, itikaf: 78.8, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
-            { name: "Siti Chairunnisa", id: "PKD-2026-007", prodi: "Pendidikan Bahasa Arab", school: "MAS Darul Hufadh", tpa: 70, tahfidz: 66, kepesantrenan: 83.6, itikaf: 82.5, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
-            { name: "Agis Nur Zahra", id: "PKD-2026-008", prodi: "Pendidikan Bahasa Arab", school: "MA Al Firdaus", tpa: 64, tahfidz: 71, kepesantrenan: 77.3, itikaf: 78.8, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
-            { name: "Shohibul Wafa Tajul Arifin", id: "PKD-2026-009", prodi: "Pendidikan Agama Islam", school: "MAS Ulumuddin Susukan Cirebon", tpa: 61, tahfidz: 82, kepesantrenan: 80.5, itikaf: 85, psikotes: "Tidak Rekomendasi", status: "DIPANGGIL / WAWANCARA KHUSUS" },
-            { name: "Shohibul Wafi Tajul Arifin", id: "PKD-2026-010", prodi: "Pendidikan Agama Islam", school: "MAS Ulumuddin Susukan Cirebon", tpa: 58, tahfidz: 73, kepesantrenan: 79.8, itikaf: 83.8, psikotes: "Tidak Rekomendasi", status: "DIPANGGIL / WAWANCARA KHUSUS" },
-            { name: "Mbappe", id: "PKD-2026-030", prodi: "Pendidikan Bahasa Arab", school: "Real Madrid", tpa: 59, tahfidz: 75, kepesantrenan: 79.8, itikaf: 85.8, psikotes: "Tidak Rekomendasi", status: "DIPANGGIL / WAWANCARA KHUSUS" },
+            // Update: M. Rizki Al Muiz jadi LULUS
+            { name: "M. Rizki Al Muiz", id: "PKD-2026-002", password: "pwd002", prodi: "Manajemen Pendidikan Islam", school: "SMK Al Watasi", tpa: 64, tahfidz: 77, kepesantrenan: 79.3, itikaf: 86.3, psikotes: "Tidak Rekomendasi", status: "LULUS" },
+            
+            { name: "Siti Nuravni", id: "PKD-2026-004", password: "pwd004", prodi: "Teknologi Industri Pertanian", school: "MAS. Nurul Islam", tpa: 82, tahfidz: 66, kepesantrenan: 81.3, itikaf: 78.8, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
+            { name: "Siti Chairunnisa", id: "PKD-2026-007", password: "pwd007", prodi: "Pendidikan Bahasa Arab", school: "MAS Darul Hufadh", tpa: 70, tahfidz: 66, kepesantrenan: 83.6, itikaf: 82.5, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
+            { name: "Agis Nur Zahra", id: "PKD-2026-008", password: "pwd008", prodi: "Pendidikan Bahasa Arab", school: "MA Al Firdaus", tpa: 64, tahfidz: 71, kepesantrenan: 77.3, itikaf: 78.8, psikotes: "Dipetimbangkan", status: "DIPANGGIL / WAWANCARA KHUSUS" },
+            
+            // Update: Shohibul Wafa Tajul Arifin LULUS
+            { name: "Shohibul Wafa Tajul Arifin", id: "PKD-2026-009", password: "pwd009", prodi: "Pendidikan Agama Islam", school: "MAS Ulumuddin Susukan Cirebon", tpa: 61, tahfidz: 82, kepesantrenan: 80.5, itikaf: 85, psikotes: "Tidak Rekomendasi", status: "LULUS" },
+            
+            // Update: Shohibul Wafi Tajul Arifin Tidak Diterima & Pindah ke Beasiswa Tahfidz
+            { name: "Shohibul Wafi Tajul Arifin", id: "PKD-2026-010", password: "pwd010", prodi: "Beasiswa Tahfidz (Pindahan PAI)", school: "MAS Ulumuddin Susukan Cirebon", tpa: 58, tahfidz: 73, kepesantrenan: 79.8, itikaf: 83.8, psikotes: "Tidak Rekomendasi", status: "PINDAH BEASISWA TAHFIDZ", note: " dialihkan dan dipindahkan pendaftarannya ke jalur Beasiswa Tahfidz." },
 
-            // Yang Tidak Lolos
-            { name: "Zulhan Yahya", id: "PKD-2026-025", prodi: "Peternakan", school: "SMAIT Tebuireng 4 Al Ishlah Riau", tpa: 40, tahfidz: 50, kepesantrenan: 60, itikaf: 46.3, psikotes: "Tidak Rekomendasi", status: "TIDAK LULUS" },
-            { name: "Rahma Zahwa", id: "PKD-2026-016", prodi: "Administrasi Publik", school: "SMK Bakti Kusumah", tpa: 76, tahfidz: 71, kepesantrenan: 80.1, itikaf: 81.3, psikotes: "Tidak Rekomendasi", status: "TIDAK LULUS" },
-            { name: "Gazella Azharina Jawalani", id: "PKD-2026-012", prodi: "Ekonomi Syariah", school: "MA Al-Firdaus", tpa: 58, tahfidz: 82, kepesantrenan: 79.3, itikaf: 73.8, psikotes: "Tidak Rekomendasi", status: "TIDAK LULUS" },
-            { name: "Messi", id: "PKD-2026-040", prodi: "Ilmu Kesehatan", school: "Inter Miami", tpa: 51, tahfidz: 62, kepesantrenan: 79.3, itikaf: 63.8, psikotes: "Tidak Rekomendasi", status: "TIDAK LULUS" }
+            // Update: Zulhan Yahya Tidak Lulus & Diharapkan ke Kampus
+            { name: "Zulhan Yahya", id: "PKD-2026-025", password: "pwd025", prodi: "Peternakan", school: "SMAIT Tebuireng 4 Al Ishlah Riau", tpa: 40, tahfidz: 50, kepesantrenan: 60, itikaf: 46.3, psikotes: "Tidak Rekomendasi", status: "TIDAK LULUS", note: "Tidak lulus dan diharapkan hadir langsung ke kampus." },
+            
+            // Update: Rahma Zahwa Lulus & Pindah Prodi (PBA/PAI/PGSD)
+            { name: "Rahma Zahwa", id: "PKD-2026-016", password: "pwd016", prodi: "Pendidikan Bahasa Arab / PAI / PGSD (Pilihan Alternatif)", school: "SMK Bakti Kusumah", tpa: 76, tahfidz: 71, kepesantrenan: 80.1, itikaf: 81.3, psikotes: "Tidak Rekomendasi", status: "LULUS", note: "Dinyatakan Lulus dengan opsi perpindahan prodi ke PBA / PAI / PGSD." },
+            
+            // Update: Gazella Azharina Jawalani Jadi Lulus
+            { name: "Gazella Azharina Jawalani", id: "PKD-2026-012", password: "pwd012", prodi: "Ekonomi Syariah", school: "MA Al-Firdaus", tpa: 58, tahfidz: 82, kepesantrenan: 79.3, itikaf: 73.8, psikotes: "Tidak Rekomendasi", status: "LULUS" }
         ];
 
         function getScoreClass(score) {
@@ -650,7 +684,9 @@
 
         function checkStatus() {
             playClickSound();
-            const inputVal = document.getElementById('participantName').value.trim().toLowerCase();
+            const inputName = document.getElementById('participantName').value.trim().toLowerCase();
+            const inputPass = document.getElementById('participantPassword').value.trim();
+            
             const resultContainer = document.getElementById('resultContainer');
             const statusBox = document.getElementById('statusBox');
             const resultTitle = document.getElementById('resultTitle');
@@ -666,27 +702,27 @@
             notPassedContainer.innerHTML = "";
             notPassedContainer.style.display = "none";
 
-            if (!inputVal) {
-                alert("Harap masukkan Nama terlebih dahulu!");
+            if (!inputName || !inputPass) {
+                alert("Harap masukkan Nama dan Password Pribadi terlebih dahulu!");
                 return;
             }
 
             resultContainer.style.display = 'block';
 
-            let data = databasePeserta.find(p => p.name.toLowerCase() === inputVal || p.name.toLowerCase().startsWith(inputVal));
-            
-            if (!data) {
-                data = databasePeserta.find(p => p.name.toLowerCase().includes(inputVal));
-            }
+            // Pencarian data berdasarkan nama (mendukung nama panggilan/depan) dan password yang cocok
+            let data = databasePeserta.find(p => 
+                (p.name.toLowerCase() === inputName || p.name.toLowerCase().includes(inputName)) && 
+                p.password === inputPass
+            );
             
             if (!data) {
                 statusBox.className = "result-status-box failed";
-                resultTitle.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> NAMA TIDAK DITEMUKAN';
+                resultTitle.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> AKSES DITOLAK / DATA TIDAK DITEMUKAN';
                 resName.innerText = document.getElementById('participantName').value;
                 resId.innerText = "-";
                 resProdi.innerText = "-";
                 resSchool.innerText = "-";
-                actionAreaExtra.innerHTML = `<p style="color:var(--danger); margin-top:15px; font-weight:600;">Nama tidak terdaftar di sistem. Periksa kembali ejaan nama Anda.</p>`;
+                actionAreaExtra.innerHTML = `<p style="color:var(--danger); margin-top:15px; font-weight:600;">Kombinasi Nama dan Password Anda salah atau tidak terdaftar di sistem. Periksa kembali.</p>`;
                 return;
             }
 
@@ -708,11 +744,25 @@
             if (data.status === "LULUS") {
                 statusBox.className = "result-status-box passed";
                 resultTitle.innerHTML = '<i class="fa-solid fa-circle-check"></i> STATUS: LULUS (VERIFIED)';
+                let extraNote = data.note ? `<p style="color:var(--accent); margin-top:8px; font-size:0.85rem;">Catatan: ${data.note}</p>` : '';
                 actionAreaExtra.innerHTML = `
-                    <p style="color:var(--secondary); margin-bottom:15px; font-weight:600;">Selamat! Anda dinyatakan LULUS seleksi.</p>
+                    <p style="color:var(--secondary); margin-bottom:5px; font-weight:600;">Selamat! Anda dinyatakan LULUS seleksi.</p>
+                    ${extraNote}
                     <a href="https://drive.google.com/file/d/1ZIipCJhUtSNpU3XV8jupC0bhdLr_u4ZA/view?usp=sharing" target="_blank" class="certificate-download-btn">
-                        <i class="fa-solid fa-download"></i> DOWNLOAD SK KELULUSAN 
+                        <i class="fa-solid fa-download"></i> DOWNLOAD SK KELULUSAN & SERTIFIKAT
                     </a>
+                `;
+            } else if (data.status === "PINDAH BEASISWA TAHFIDZ") {
+                statusBox.className = "result-status-box warning";
+                resultTitle.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> STATUS: PINDAH JALUR BEASISWA TAHFIDZ';
+                actionAreaExtra.innerHTML = `
+                    <p style="color:var(--accent); margin-bottom:15px; font-weight:600;">Mohon maaf, Anda belum diterima di prodi reguler pilihan utama, namun ${data.note}</p>
+                `;
+            } else if (data.status === "DIPANGGIL / CATATAN") {
+                statusBox.className = "result-status-box warning";
+                resultTitle.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> STATUS: CATATAN KHUSUS (DIPANGGIL KE KAMPUS)';
+                actionAreaExtra.innerHTML = `
+                    <p style="color:var(--accent); margin-bottom:15px; font-weight:600;">${data.note}</p>
                 `;
             } else if (data.status === "DIPANGGIL / WAWANCARA KHUSUS") {
                 statusBox.className = "result-status-box warning";
@@ -722,12 +772,13 @@
                 `;
             } else {
                 statusBox.className = "result-status-box failed";
-                resultTitle.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> STATUS: BELUM LULUS';
+                resultTitle.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> STATUS: TIDAK LULUS';
+                let noteText = data.note ? `<p style="color:var(--danger); margin-bottom:10px; font-weight:600;">${data.note}</p>` : '';
                 actionAreaExtra.innerHTML = `
-                    <p style="color:var(--danger); margin-bottom:15px; font-weight:600;">Mohon maaf, berdasarkan hasil peninjauan mendalam, Anda dinyatakan belum lolos pada periode ini.</p>
+                    ${noteText}
+                    <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.85rem;">Berdasarkan hasil peninjauan mendalam, Anda dinyatakan belum lolos pada seleksi periode ini.</p>
                 `;
 
-                // Tampilkan info penyemangat dan 1 rekomendasi beasiswa alternatif
                 notPassedContainer.style.display = "block";
                 notPassedContainer.innerHTML = `
                     <div class="scholarship-box">
@@ -739,7 +790,7 @@
                                 <h4>Beasiswa Program Khusus</h4>
                                 <span>Belum beruntung di KIP-K dan beasiswa PKD UNIDA Tahun Akademik 2026/2027? Perjuangan kuliahmu belum selesai di sini!</span>
                             </div>
-                            <a href="https://wa.me/6285218621311?text=Halo%20Admin,%20saya%20${encodeURIComponent(data.name)}%20ingin%20berkonsultasi%20mengenai%20Beasiswa%20Program%20Khusus%20setelah%20belum%20beruntung%20di%20seleksi%20PKD%20UNIDA%202026." target="_blank" class="scholarship-link">
+                            <a href="https://wa.me/6285218621311?text=Halo%20Admin,%20saya%20${encodeURIComponent(data.name)}%20(ID:%20${data.id})%20ingin%20berkonsultasi%20mengenai%20Beasiswa%20Program%20Khusus%20setelah%20belum%20beruntung%20di%20seleksi%20PKD%20UNIDA%202026." target="_blank" class="scholarship-link">
                                 <i class="fa-brands fa-whatsapp fa-lg"></i> Konsultasi via WhatsApp
                             </a>
                         </div>
